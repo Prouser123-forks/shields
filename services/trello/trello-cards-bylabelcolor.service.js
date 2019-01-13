@@ -1,6 +1,6 @@
 'use strict'
 
-const BaseJsonService = require('../base-json')
+const BaseTrelloService = require('./trello-base')
 const { metric } = require('../../lib/text-formatters')
 
 const Joi = require('joi')
@@ -8,7 +8,7 @@ const schema = Joi.array().required()
 
 const apiKey = '52a2439b8166344774e52720d3229076'
 
-module.exports = class TrelloCardsByLabelColor extends BaseJsonService {
+module.exports = class TrelloCardsByLabelColor extends BaseTrelloService {
   static log(message) {
     console.log(message)
   }
@@ -16,13 +16,6 @@ module.exports = class TrelloCardsByLabelColor extends BaseJsonService {
     return {
       base: 'trello/cards/bylabelcolor',
       pattern: ':boardid/:labelColor',
-    }
-  }
-
-  static get defaultBadgeData() {
-    return {
-      label: 'trello',
-      color: 'yellow',
     }
   }
 
@@ -34,14 +27,6 @@ module.exports = class TrelloCardsByLabelColor extends BaseJsonService {
         return array[i]
       }
     }
-  }
-
-  static getOccurences(id, array) {
-    const arrayString = JSON.stringify(array)
-    //this.log('-----getOccurences arrayString-----')
-    //this.log(arrayString)
-    //this.log('-----getOccurences arrayString-----')
-    return arrayString.split(id).length - 1
   }
 
   async handle({ boardid, labelColor }) {
@@ -110,10 +95,6 @@ module.exports = class TrelloCardsByLabelColor extends BaseJsonService {
       label: `${labelColor} label cards`,
       message: metric(cards),
     }
-  }
-
-  static get category() {
-    return 'other'
   }
 
   static get examples() {
