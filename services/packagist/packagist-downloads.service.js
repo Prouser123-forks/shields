@@ -57,7 +57,6 @@ module.exports = class PackagistDownloads extends BasePackagistService {
     return [
       {
         title: 'Packagist',
-        pattern: ':interval/:user/:repo',
         namedParams: {
           interval: 'dm',
           user: 'doctrine',
