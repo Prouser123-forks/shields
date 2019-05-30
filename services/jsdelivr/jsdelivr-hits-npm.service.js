@@ -6,7 +6,7 @@ module.exports = class jsDelivrHitsNPM extends BaseJsDelivrService {
   static get route() {
     return {
       base: 'jsdelivr/npm',
-      pattern: ':period(hd|hw|hm|hy)/:packageName',
+      pattern: ':period(hd|hw|hm|hy)/:scope(@[^/]+)?/:packageName',
     }
   }
 
@@ -20,13 +20,23 @@ module.exports = class jsDelivrHitsNPM extends BaseJsDelivrService {
         },
         staticPreview: this.render({ period: 'hm', hits: 920101789 }),
       },
+      {
+        title: 'jsDelivr hits (npm, scoped)',
+        namedParams: {
+          period: 'hm',
+          scope: '@hapi',
+          packageName: 'joi',
+        },
+        staticPreview: this.render({ period: 'hm', hits: 920101789 }),
+      },
     ]
   }
 
-  async fetch({ period, packageName }) {
+  async fetch({ period, packageName, scope }) {
+    const wantedPackage = `${scope ? `${scope}/` : ''}${packageName}`
     return this._requestJson({
       schema,
-      url: `https://data.jsdelivr.com/v1/package/npm/${packageName}/stats/date/${
+      url: `https://data.jsdelivr.com/v1/package/npm/${wantedPackage}/stats/date/${
         periodMap[period]
       }`,
     })
